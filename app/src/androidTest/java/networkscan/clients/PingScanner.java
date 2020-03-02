@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.*;
 import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
-public class PingScanner extends Activity {
-
+public class PingScanner extends AppCompatActivity {
+    TextView tout = findViewById(1);
 
     WifiManager wifi;
     String wifis[];
@@ -42,8 +45,9 @@ public class PingScanner extends Activity {
             for (int i = 0; i < wifiScanList.size(); i++) {
                 wifis[i] = ((wifiScanList.get(i)).toString());
                 System.out.println(wifis[i]);
+                tout.append(wifis[i]);
             }
-            
+
         }
     }
 
