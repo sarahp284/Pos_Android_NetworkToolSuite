@@ -1,4 +1,4 @@
-package networkscan.clients;
+package com.example.pos_networktoolsuite;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
