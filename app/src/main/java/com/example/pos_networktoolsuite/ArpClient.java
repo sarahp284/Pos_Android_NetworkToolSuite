@@ -7,6 +7,8 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,18 +20,22 @@ public class ArpClient extends Activity {
 
     LinkedList<String> devices = new LinkedList<>();
     WifiManager mWifiManager;
-
+    Context context;
+    public ArpClient(Context c)
+    {
+        this.context = c;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
-        mWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
     }
     public void pingservice(){
 
-            WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
+
             String subnet = getSubnetAddress(mWifiManager.getDhcpInfo().gateway);
 
 
