@@ -1,7 +1,11 @@
 package com.example.pos_networktoolsuite;
+
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -9,12 +13,24 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.LinkedList;
 
-public class ArpClient extends Activity {
+public class ArpClient extends Application {
+
+    LinkedList<String> devices = new LinkedList<>();
+    WifiManager mWifiManager;
+private static Context mContext;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //  instance = this;
+        mContext = getApplicationContext();
+    }
+
     public void pingservice(){
-        try {
-            WifiManager mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-           // WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
+        mWifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
             String subnet = getSubnetAddress(mWifiManager.getDhcpInfo().gateway);
 
 
@@ -29,6 +45,8 @@ public class ArpClient extends Activity {
                         String strMacAddress = getMacFromIP(host);
 
                         Log.w("DeviceDiscovery", "Reachable Host: " + String.valueOf(host) + " and Mac : " + strMacAddress + " is reachable!");
+                        log("DeviceDiscovery Reachable Host: " + String.valueOf(host) + " and Mac : " + strMacAddress + " is reachable!");
+
                     } else {
                         Log.e("DeviceDiscovery", "❌ Not Reachable Host: " + String.valueOf(host));
 
@@ -37,9 +55,16 @@ public class ArpClient extends Activity {
                     e.printStackTrace();
                 }
             }
-        }catch(Exception e){
 
-        }
+    }
+    public void log(String message)
+    {
+        devices.add(message);
+    }
+
+    public LinkedList<String> getDevices()
+    {
+        return devices;
     }
 
     public String getMacFromIP(String ipaddress) {

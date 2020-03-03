@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.example.pos_networktoolsuite.MainActivity">
 
     <TextView
-        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Network Tool Suite"
@@ -24,45 +23,28 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="122dp"
-        android:layout_marginTop="65dp"
-        android:layout_marginEnd="150dp"
-        android:layout_marginBottom="51dp"
+        android:onClick="onInet"
         android:text="Start arp scan"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="122dp"
+        tools:layout_editor_absoluteY="159dp" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="202dp"
         android:layout_height="174dp"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="105dp"
-        android:layout_marginBottom="219dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        tools:layout_editor_absoluteX="104dp"
+        tools:layout_editor_absoluteY="338dp" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="150dp"
         android:layout_height="33dp"
-        android:layout_marginStart="122dp"
-        android:layout_marginTop="63dp"
-        android:layout_marginEnd="139dp"
-        android:layout_marginBottom="35dp"
         android:text="Available Devices"
         android:textColor="#070707"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        tools:layout_editor_absoluteX="122dp"
+        tools:layout_editor_absoluteY="270dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
