@@ -1,14 +1,14 @@
 package com.example.pos_networktoolsuite;
 
-import android.app.Activity;
-import android.app.Application;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -17,63 +17,59 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.LinkedList;
 
-public class ArpClient extends Application {
+public class ArpClient  {
 
     LinkedList<String> devices = new LinkedList<>();
     WifiManager mWifiManager;
 private static Context mContext;
+    Handler mHandler = new Handler();
+    int hostint=0;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        //  instance = this;
-        mContext = getApplicationContext();
+
+    public ArpClient(Context c){
+mContext=c;
     }
 
-    public void pingservice(){
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
+    protected String doInBackground(int hostint) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         mWifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
-            String subnet = getSubnetAddress(mWifiManager.getDhcpInfo().gateway);
+        WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
+        String subnet = getSubnetAddress(mWifiManager.getDhcpInfo().gateway);
+            String host = subnet + "." + hostint;
+        String strMacAddress="";
+            try {
+                if (InetAddress.getByName(host).isReachable(100)) {
 
-
-            for (int i = 1; i < 255; i++) {
-
-                String host = subnet + "." + i;
-                System.out.println(host);
-
-                try {
-                    if (InetAddress.getByName(host).isReachable(10000)) {
-
-                        String strMacAddress = getMacFromIP(host);
-
-                        Log.w("DeviceDiscovery", "Reachable Host: " + String.valueOf(host) + " and Mac : " + strMacAddress + " is reachable!");
-                        log("DeviceDiscovery Reachable Host: " + String.valueOf(host) + " and Mac : " + strMacAddress + " is reachable!");
-
-                    } else {
-                        Log.e("DeviceDiscovery", "❌ Not Reachable Host: " + String.valueOf(host));
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    strMacAddress = getMacFromIP(host);
+                    Log.w("IP",host);
+                    return  "IP Adr.: "+host +" MAC Adr.: "+strMacAddress;
+                } else {
+                  // return "no device";
                 }
-            }
+            } catch (IOException e) {
+                e.printStackTrace();
 
+        }
+        return "a";
     }
+
     public void log(String message)
     {
         devices.add(message);
     }
 
+
     public LinkedList<String> getDevices()
     {
+        Log.w("Devicetest",devices.size()+"");
         return devices;
     }
 
     public String getMacFromIP(String ipaddress) {
         String mac = "";
+
         Log.i("IPScanning", "Scan was started");
         try {
             BufferedReader br = new BufferedReader(new FileReader("/proc/net/arp"));
@@ -83,11 +79,10 @@ private static Context mContext;
                 if (parts != null && parts.length >= 4) {
                     String ip = parts[0];
                     String macadr = parts[3];
-                    if (mac.matches("..:..:..:..:..:..")) {
+                    if (macadr.matches("..:..:..:..:..:..")) {
 
                         if (ip.equalsIgnoreCase(ipaddress)) {
-                            System.out.println(mac);
-                            return mac;
+                            return macadr;
                         }
                     }
                 }
@@ -116,8 +111,5 @@ return "";
 
     }
 
-    public static void main(String[] args) {
-        ArpClient ac=new ArpClient();
-        ac.pingservice();
-    }
+
 }
