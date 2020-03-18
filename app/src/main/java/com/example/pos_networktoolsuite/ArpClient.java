@@ -1,13 +1,14 @@
 package com.example.pos_networktoolsuite;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -16,26 +17,25 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.LinkedList;
 
-public class ArpClient extends Activity {
+public class ArpClient extends Application {
 
     LinkedList<String> devices = new LinkedList<>();
     WifiManager mWifiManager;
-    Context context;
-    public ArpClient(Context c)
-    {
-        this.context = c;
-    }
+private static Context mContext;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-
-        mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-
+    public void onCreate() {
+        super.onCreate();
+        //  instance = this;
+        mContext = getApplicationContext();
     }
+
     public void pingservice(){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
-
+        StrictMode.setThreadPolicy(policy);
+        mWifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
             String subnet = getSubnetAddress(mWifiManager.getDhcpInfo().gateway);
 
 
@@ -46,8 +46,19 @@ public class ArpClient extends Activity {
 
                 try {
                     if (InetAddress.getByName(host).isReachable(10000)) {
+                        Log.i("d",getSubnetAddress(mWifiManager.getConnectionInfo().getIpAddress())+"");
+                        String strMacAddress = "";
+                        if(host.equals(getIpFromInt(mWifiManager.getConnectionInfo().getIpAddress())+""))
+                        {
+                             strMacAddress = mWifiManager.getConnectionInfo().getMacAddress();
+                             mWifiInfo.getMacAddress();
+                        }
+                        else
+                        {
+                             strMacAddress = getMacFromIP(host);
+                        }
 
-                        String strMacAddress = getMacFromIP(host);
+
 
                         Log.w("DeviceDiscovery", "Reachable Host: " + String.valueOf(host) + " and Mac : " + strMacAddress + " is reachable!");
                         log("DeviceDiscovery Reachable Host: " + String.valueOf(host) + " and Mac : " + strMacAddress + " is reachable!");
@@ -80,14 +91,19 @@ public class ArpClient extends Activity {
             String line = "";
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(" +");
+                Log.i("in loop","In loop");
                 if (parts != null && parts.length >= 4) {
+                    Log.i("in parts if", "in parts if");
                     String ip = parts[0];
                     String macadr = parts[3];
-                    if (mac.matches("..:..:..:..:..:..")) {
-
+                    Log.i("asd",macadr );
+                    Log.i("in1 parts if", ip);
+                    if (macadr.matches("..:..:..:..:..:..")) {
+                        Log.i("marches", "matches");
                         if (ip.equalsIgnoreCase(ipaddress)) {
+                            Log.i("marches", "return");
                             System.out.println(mac);
-                            return mac;
+                            return macadr;
                         }
                     }
                 }
@@ -113,6 +129,22 @@ return "";
 
         }
             return ipString;
+
+    }
+    private String getIpFromInt(int address)
+    {
+        String ipString="";
+        try {
+            ipString = String.format(
+                    "%d.%d.%d.%d",
+                    (address & 0xff),
+                    (address >> 8 & 0xff),
+                    (address >> 16 & 0xff),
+                    (address >> 24 & 0xff));
+        }catch(Exception e){
+
+        }
+        return ipString;
 
     }
 
