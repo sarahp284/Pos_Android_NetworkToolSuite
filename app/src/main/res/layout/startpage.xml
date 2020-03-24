@@ -10,7 +10,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:text="Network Tool Suite"
         android:textAlignment="center"
         android:textColor="#000000"
@@ -22,12 +22,30 @@
 
     <ListView
         android:id="@+id/action"
-        android:layout_width="128dp"
-        android:layout_height="212dp"
-        android:layout_marginEnd="232dp"
-        android:layout_marginBottom="232dp"
+        android:layout_width="60dp"
+        android:layout_height="201dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="264dp"
+        android:layout_marginBottom="384dp"
+        android:background="#f2f2f0"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menuBar" />
+
+    <ImageView
+        android:id="@+id/menuBar"
+        android:layout_width="75dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="344dp"
+        android:layout_marginBottom="3dp"
+        android:background="#F2F2F0"
+        app:layout_constraintBottom_toTopOf="@+id/action"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:srcCompat="@drawable/side_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

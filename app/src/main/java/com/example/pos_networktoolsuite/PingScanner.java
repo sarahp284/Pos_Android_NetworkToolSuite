@@ -1,62 +1,33 @@
 package com.example.pos_networktoolsuite;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.wifi.*;
-import android.os.Bundle;
-import android.widget.TextView;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.List;
-
-public class PingScanner extends AppCompatActivity {
-    TextView tout = findViewById(1);
-
-    WifiManager wifi;
-    String wifis[];
-    WifiScanReceiver wifiReciever;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-
-        wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        wifiReciever = new WifiScanReceiver();
-        wifi.startScan();
-    }
+public class PingScanner {
 
 
-    protected void onResume() {
-        registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        super.onResume();
-    }
+    public String ping(String host) throws IOException {
+        Runtime r=Runtime.getRuntime();
+        String output="";
 
 
-    private class WifiScanReceiver extends BroadcastReceiver {
-        public void onReceive(Context c, Intent intent) {
-            List<ScanResult> wifiScanList = wifi.getScanResults();
-            wifis = new String[wifiScanList.size()];
+        Process p=r.exec(new String[] {"ping", "-c 1", host});
+        BufferedReader in=new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String inputLine;
+        while((inputLine=in.readLine())!=null)
+        {
+            if(inputLine.contains("time")){
+               String test=inputLine.substring(inputLine.indexOf("time")+5,inputLine.indexOf("ms")+2);
+                output += test;
+                break;
 
-            for (int i = 0; i < wifiScanList.size(); i++) {
-                wifis[i] = ((wifiScanList.get(i)).toString());
-                System.out.println(wifis[i]);
-                tout.append(wifis[i]);
             }
-
         }
-    }
 
-    public void startScan()
-    {
-        new WifiScanReceiver();
-    }
-
-    public static void main(String[] args) {
-        new PingScanner().startScan();
+        return output;
     }
 }
+
+
+
