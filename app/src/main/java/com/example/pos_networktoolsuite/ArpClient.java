@@ -40,11 +40,11 @@ mContext=c;
             String host = subnet + "." + hostint;
         String strMacAddress="";
             try {
-                if (InetAddress.getByName(host).isReachable(100)) {
+                if (InetAddress.getByName(host).isReachable(50)) {
 
                     strMacAddress = getMacFromIP(host);
                     Log.w("IP",host);
-                    return  "IP Adr.: "+host +" MAC Adr.: "+strMacAddress;
+                    return  "IP Adr.: "+host +"\n  MAC Adr.: "+strMacAddress;
                 } else {
                   // return "no device";
                 }

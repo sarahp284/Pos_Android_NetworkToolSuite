@@ -1,29 +1,22 @@
 package com.example.pos_networktoolsuite.ssh;
 
 import android.app.Activity;
-import android.app.Application;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 
-import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.example.pos_networktoolsuite.MainActivity;
-import com.example.pos_networktoolsuite.R;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Properties;
 
 public class SSHClient extends Activity {
 
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
 
-            super.onCreate(savedInstanceState);
+        public void onSSHconnect(){
+
             Log.i("inonfuckingcreate","inonfuckingcreate");
-            setContentView(R.layout.activity_main);
             new AsyncTask<Integer, Void, Void>(){
                 @Override
                 protected Void doInBackground(Integer... params) {
