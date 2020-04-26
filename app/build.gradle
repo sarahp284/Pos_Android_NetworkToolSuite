@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+
 }
 
 dependencies {
@@ -27,6 +31,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'com.github.livefront:bridge:v1.2.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation files('D:/jsch-0.1.55')
 }

@@ -1,11 +1,18 @@
 package com.example.pos_networktoolsuite;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -96,7 +103,7 @@ public void init(){
                 callPingClient();
             }
             if(action==2){
-
+callSSH();
             }
         }
 
@@ -106,6 +113,8 @@ public void init(){
 
 
 }
+
+
     Typeface t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,8 +275,11 @@ public void init(){
         });
     }
     public void callSSH(){
-        SSHClient sc=new SSHClient();
-        sc.onSSHconnect();
+        setContentView(R.layout.sshterminal);
+       sshdialog sd=new sshdialog();
+        sd.showNow(getSupportFragmentManager(),"tag");
+      //  SSHClient sc=new SSHClient();
+      //  sc.onSSHconnect();
     }
     public void hideKeyBoard(){
         View view1 = this.getCurrentFocus();
@@ -276,6 +288,30 @@ public void init(){
             imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
         }
     }
+    public static class sshdialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.message).setTitle(R.string.connect);
+            LayoutInflater inflater = this.getLayoutInflater();
+            builder.setView(inflater.inflate(R.layout.dialog, null,false))
+            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+
+            return builder.create();
+        }
+        // SSHClient sc=new SSHClient();
+        //   sc.onSSHconnect();
+    }
 }
+
 

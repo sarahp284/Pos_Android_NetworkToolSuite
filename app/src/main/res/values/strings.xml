@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">POS_NetworkToolSuite</string>
+    <string name="connect">Connecting to SSH Server</string>
+    <string name="message">test</string>
+    <string name="ok">test</string>
+    <string name="cancel">test</string>
 </resources>
