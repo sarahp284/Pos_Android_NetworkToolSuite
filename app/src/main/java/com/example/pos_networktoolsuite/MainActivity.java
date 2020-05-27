@@ -1,8 +1,5 @@
 package com.example.pos_networktoolsuite;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -24,10 +21,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+
+import com.example.pos_networktoolsuite.beans.OpenPort;
+import com.example.pos_networktoolsuite.networkscan.PortScan;
 import com.example.pos_networktoolsuite.ssh.SSHClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 public class MainActivity extends FragmentActivity {
@@ -36,9 +39,9 @@ public class MainActivity extends FragmentActivity {
     TextView welcomev;
     ImageView iv;
     ImageView home;
-    int listcolor=0;
     int menu = 0;
     int action =0;
+
     ListView lv;
 
 public void Display(View v){
@@ -75,7 +78,7 @@ public void init(){
     listItems.add("Ping Client");
     listItems.add("SSH Client");
     listItems.add("Portscan");
-    listItems.add("Tracert");
+    listItems.add("FTP Client");
     lv.setBackgroundResource(R.drawable.customrect);
     adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems){
         @Override
@@ -103,7 +106,10 @@ public void init(){
                 callPingClient();
             }
             if(action==2){
-callSSH();
+callSSHDialog();
+            }
+            if(action==3){
+                callportscan();
             }
         }
 
@@ -274,12 +280,26 @@ callSSH();
 
         });
     }
-    public void callSSH(){
+    public void callSSHDialog(){
         setContentView(R.layout.sshterminal);
-       sshdialog sd=new sshdialog();
-        sd.showNow(getSupportFragmentManager(),"tag");
-      //  SSHClient sc=new SSHClient();
-      //  sc.onSSHconnect();
+        home=findViewById(R.id.imageViewhelp2);
+        home.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                init();
+            }
+        });
+        Button connect=findViewById(R.id.connect);
+        connect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sshdialog();
+            }
+        });
+
+
+
     }
     public void hideKeyBoard(){
         View view1 = this.getCurrentFocus();
@@ -288,30 +308,114 @@ callSSH();
             imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
         }
     }
-    public static class sshdialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    public void sshdialog (){
+        final SSHClient sc=new SSHClient();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.message).setTitle(R.string.connect);
-            LayoutInflater inflater = this.getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.dialog, null,false))
-            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
-                }
-            });
+          //
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        final View view = inflater.inflate(R.layout.dialog, null, false);
+        String name="";
+        builder.setView(view);
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User cancelled the dialog
+
+                }
+            });
+           builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    EditText etun=view.findViewById(R.id.username);
+                    EditText etpw=view.findViewById(R.id.pw);
+                    EditText ethost=view.findViewById(R.id.host);
+                    String uname=etun.getText()+"";
+                    String pw=etpw.getText()+"";
+                    String host=ethost.getText()+"";
+                   sc.setValues(uname,host,pw);
+                   hideKeyBoard();
+
                 }
             });
 
-            return builder.create();
+        Button send=findViewById(R.id.send);
+        final TextView input=findViewById(R.id.input);
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyBoard();
+                final Handler handler = new Handler();
+                sc.onSSHconnect(input.getText() + "");
+                handler.post(new Runnable() {
+                    public void run() {
+                        String output = sc.getOutput();
+                        TextView terminal = findViewById(R.id.terminal);
+                        terminal.setText(output);
+                        handler.postDelayed(this, 100);
+                    }
+                });
+
+            }
+        });
+
+           AlertDialog ad=builder.create();
+           ad.show();
+
         }
+        public void callportscan(){
+        setContentView(R.layout.portscan);
+        Button ps_button=findViewById(R.id.ps_button);
+            final ArrayAdapter<String> adapter;
+            final ArrayList<String> listItems = new ArrayList<String>();
+            adapter =new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems){
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent){
+                    // Cast the list view each item as text view
+                    TextView item = (TextView) super.getView(position,convertView,parent);
+                    String s=item.getText()+"";
+                    item.setTextColor(Color.parseColor("#ffffff"));
+                    item.setTypeface(t);
+                    item.setBackgroundColor(Color.parseColor("#D0000000"));
+                    item.setTextSize(18);
+                    return item;
+                }
+            };
+
+        ps_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyBoard();
+                EditText et1=findViewById(R.id.ps);
+                ListView lv=findViewById(R.id.ps_results);
+                lv.setAdapter(adapter);
+                final String ip=et1.getText()+"";
+                final PortScan ps=new PortScan();
+                final Handler handler = new Handler();
+                handler.post(new Runnable() {
+                    public void run() {
+
+                        handler.postDelayed(this, 100);
+
+                for (int i = 1; i <150 ; i++) {
+                    OpenPort op;
+                    op=ps.startPortscan(ip,i,100);
+                    if(op.getIsOpen()){
+                        listItems.add(op.getPort()+"");
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+                    }
+                });
+
+            }
+
+        });
+
+        }
+
         // SSHClient sc=new SSHClient();
         //   sc.onSSHconnect();
     }
-}
+
+
 
 

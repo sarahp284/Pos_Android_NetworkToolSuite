@@ -8,4 +8,11 @@ public class OpenPort {
         this.port = port;
         this.isOpen = isOpen;
     }
+
+    public Boolean getIsOpen(){
+        return isOpen;
+    }
+    public int getPort(){
+        return port;
+    }
 }

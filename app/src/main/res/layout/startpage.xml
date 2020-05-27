@@ -46,7 +46,7 @@
         android:layout_width="208dp"
         android:layout_height="65dp"
         android:background="#E8000000"
-        android:text="\n Verfügbare Funktionen"
+        android:text="Verfügbare Funktionen"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="18sp"

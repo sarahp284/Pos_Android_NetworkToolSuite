@@ -14,10 +14,20 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class SSHClient extends Activity {
-
+private static String output;
+private String uname;
+private String pw;
+private String ip;
+    static JSch jsch;
+public void setValues(String username, String ip, String pw){
+    uname=username;
+    this.ip=ip;
+    this.pw=pw;
+     jsch = new JSch();
+}
 
         @SuppressLint("StaticFieldLeak")
-        public void onSSHconnect(){
+        public void onSSHconnect(final String command){
 
             Log.i("inonfuckingcreate","inonfuckingcreate");
             new AsyncTask<Integer, Void, Void>(){
@@ -25,7 +35,7 @@ public class SSHClient extends Activity {
                 protected Void doInBackground(Integer... params) {
                     try {
                         publishProgress(new Void[0]);
-                        executeRemoteCommand("root", "toor","192.168.1.238", 22, "ls");
+                        executeRemoteCommand(uname, pw,ip, 22, command);
 
                     } catch (Exception e) {
                             e.printStackTrace();
@@ -43,7 +53,6 @@ public class SSHClient extends Activity {
 
         public static String executeRemoteCommand(String username,String password,String hostname,int port, String command)
                 throws Exception {
-            JSch jsch = new JSch();
             Session session = jsch.getSession(username, hostname, port);
             session.setPassword(password);
             // Avoid asking for key confirmation
@@ -54,6 +63,7 @@ public class SSHClient extends Activity {
             // SSH Channel
             ChannelExec channelssh = (ChannelExec)
                     session.openChannel("exec");
+            Log.w("test","connected");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             channelssh.setOutputStream(baos);
 StringBuilder o=new StringBuilder();
@@ -75,14 +85,18 @@ StringBuilder o=new StringBuilder();
                     break;
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 } catch (Exception ee) {
+                    Log.w("test",ee.getMessage());
                 }
             }
 
             channelssh.disconnect();
-            Log.w("tst","test");
-            Log.w("output",o.toString());
+            Log.w("out",o.toString());
+            output=username+": "+o.toString();
             return baos.toString();
         }
+        public String getOutput(){
+            return output;
+    }
 }
