@@ -48,6 +48,7 @@
         android:background="#E8000000"
         android:ems="10"
         android:inputType="textPersonName"
+        android:onClick="moveText"
         android:text="  Please enter host address here"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toStartOf="@+id/ping_button"
