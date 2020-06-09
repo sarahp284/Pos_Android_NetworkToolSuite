@@ -39,7 +39,7 @@ public void setValues(String username, String ip, String pw){
                         executeRemoteCommand(uname, pw,ip, 22, command);
 
                     } catch (Exception e) {
-                            e.printStackTrace();
+                            Log.w("test",e);
                     }
                     return null;
                 }

@@ -1,0 +1,180 @@
+﻿1;TCPMUX
+2;CompressNET Management Utility
+3;CompressNET Compression Process
+5;Remote Job Entry
+7;Echo
+9;Discard
+11;systat-Service
+13;Daytime 
+17;QOTD
+18;Message Send Protocol 
+19;CHARGEN
+20;FTP
+21;FTP
+22;SSH
+23;Telnet 
+24;Priv-mail
+25;SMTP
+35;Private Druckserverprotokolle
+37; TIME
+39;RLP
+41;Grafiken
+43;Whois
+47;NI FTP
+49;TACACS 
+50;Remote Mail Checking Protocol
+51;IMP
+52;XNS 
+53;DNS
+54;XNS 
+55;ISI-GL
+58;XNS 
+67;BOOTP
+68;BOOTP
+69;TFTP
+70;Gopher-Protokoll
+71;Genius-Protokoll
+79;Finger
+80;HTTP
+83;MIT ML Device
+88;Kerberos-Authentifizierungssystem
+101;NIC host name
+102;ISO-TSAP
+104;ACR/NEMA 
+105;CCSO Nameserver Protocol
+107;Remote Telnet Service protocol
+108;SNA Gateway Access Server
+109;POP2
+110;POP3
+111;ONC RPC
+113;ident
+113;auth
+115;SFTP
+117;UUCP Path Service
+118;SQL
+119;NNTP
+123;NTP
+135;DCE Endpunkt-Auflösung
+137;NetBIOS NetBIOS Name Service
+138;NetBIOS NetBIOS Datagram Service
+139;NetBIOS NetBIOS Session Service
+143;IMAP
+148;jargon 
+152;BFTP
+153;SGMP
+156;SQL Service
+161;SNMP
+162;SiSNMPTRAP
+170;Print-srv
+177;XDMCP
+179;BGP
+194;IRC
+199;SMUX
+201;AppleTalk Routing Maintenance
+209;Quick Mail Transfer Protocol
+210;ANSI Z39.50
+213;IPX
+218;MPP
+220;IMAPv3
+259;ESRO
+264;BGMP
+308;Novastor Online Backup
+311;Mac OS X Server Admin
+318;PKIX TSP
+319;Precision Time Protocol/Events
+320;Precision Time Protocol/General Messages
+350;MATIP-Type A
+351;MATIP-Type B
+366;ODMR
+369;Rpc2portmap
+370;codaauth2 
+371;ClearCase albd
+383;HP data alarm manager
+384; Remote Network Server System
+387;AURP
+389;LDAP
+401;UPS 
+427;SLP
+443;HTTPS
+444;SNPP,
+445;Microsoft-DS Active Directory
+445;Microsoft-DS SMB-Freigaben
+464;Kerberos Change/Set password
+475;tcpnethaspsrv 
+497;Dantz Retrospect
+500;ISAKMP
+504;Citadel
+512;Rexec
+512;comsat und biff
+513;rlogin
+513;Who
+514;rsh 
+514;Syslog 
+515;Line Printer Daemon-Druckservices
+517;Talk
+518;NTalk
+520;efs
+520;RIP
+521;RIPng
+524;NCP
+525;Timed
+530;RPC
+532;netnews
+533;netwall
+540;UUCP 
+543;klogin
+544;kshell
+546;DHCPv6-Client
+547;DHCPv6-Server
+548;AFP
+550;new-rwho
+554;RTSP
+556;Remotefs
+560;rmonitor
+561;monitor
+563;NNTPS
+587;SMTP
+591;FileMaker 6.0 
+593;HTTP RPC Ep Map
+601;Reliable Event Logging Protocol
+604;TUNNEL profile
+623;ASF-RMCP
+635;RLZ DBase
+636;LDAPS
+639;MSDP
+641;SupportSoft Nexus Remote Command
+646;LDP
+647;DHCP Failover protocol
+648;RRP 
+651;IEEE-MMS
+653;SupportSoft Nexus Remote Command 
+654;MMS,MMP
+657;IBM RMC 
+660;Mac OS X Server-Administration
+666;Doom
+674;ACAP
+691;MS Exchange Routing
+692;Hyperwave-ISP
+694;Linux-HA 
+695;IEEE-MMS-SSL 
+698;OLSR
+699;Access Network
+700;EPP 
+701;LMP
+702;IRIS
+706;SILC
+711;Cisco Tag Distribution Protocol
+712;TBRPF
+749;Kerberos administration
+750;rfile
+754;tell send
+847;DHCP Failover protocol
+853;DNS over TLS
+860;iSCSI 
+873;rsync Datei-Synchronisationsprotokoll
+989;FTPS 
+990;FTPS 
+991;NAS 
+992;TELNET 
+993;IMAPS
+995;POP3S

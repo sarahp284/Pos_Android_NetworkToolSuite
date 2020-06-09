@@ -4,14 +4,22 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import com.example.pos_networktoolsuite.beans.OpenPort;
+import com.example.pos_networktoolsuite.beans.PortReader;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class PortScan {
+    PortReader pr;
+    Map<String,String> ports=new TreeMap<>();
+public PortScan( Map<String,String> ports){
 
+    this.ports=ports;
+}
     public OpenPort startPortscan(String ip, int port, int timeout) {
         OpenPort op;
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -20,10 +28,12 @@ public class PortScan {
                 Socket socket = new Socket();
                 socket.connect(new InetSocketAddress(ip, port), timeout);
                 socket.close();
-              op=  new OpenPort(port, true);
+                String app="";
+
+              op=  new OpenPort(port, true,app);
             } catch (Exception ex) {
          // Log.w("test",ex);
-             op=  new OpenPort(port, false);
+             op=  new OpenPort(port, false,"");
             }
     return op;
     }
