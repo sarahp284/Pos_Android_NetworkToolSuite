@@ -348,16 +348,11 @@ alert();
                 String uname = etun.getText() + "";
                 String pw = etpw.getText() + "";
                 String host = ethost.getText() + "";
-                String base = "([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])";
-                String regex = base + "\\." + base + "\\."
-                        + base + "\\." + base;
-                if (host.matches(regex)) {
+
                     sc.setValues(uname, host, pw);
                     hideKeyBoard();
 
-                }else{
 
-                }alert();
             }
         });
 
