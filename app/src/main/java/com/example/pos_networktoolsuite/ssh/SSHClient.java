@@ -16,6 +16,7 @@ import java.util.Properties;
 public class SSHClient extends Activity {
 private static String output;
 private String uname;
+private static Session session;
 private String pw;
 private String ip;
     static JSch jsch;
@@ -53,7 +54,7 @@ public void setValues(String username, String ip, String pw){
 
         public static String executeRemoteCommand(String username,String password,String hostname,int port, String command)
                 throws Exception {
-            Session session = jsch.getSession(username, hostname, port);
+            session = jsch.getSession(username, hostname, port);
             session.setPassword(password);
             // Avoid asking for key confirmation
             Properties prop = new Properties();
@@ -66,7 +67,7 @@ public void setValues(String username, String ip, String pw){
             Log.w("test","connected");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             channelssh.setOutputStream(baos);
-StringBuilder o=new StringBuilder();
+            StringBuilder o=new StringBuilder();
             // Execute command
             channelssh.setCommand(command);
             InputStream in = channelssh.getInputStream();
@@ -95,6 +96,10 @@ StringBuilder o=new StringBuilder();
             Log.w("out",o.toString());
             output=username+": "+o.toString();
             return baos.toString();
+        }
+        public void closeSession()
+        {
+            session.disconnect();
         }
         public String getOutput(){
             return output;

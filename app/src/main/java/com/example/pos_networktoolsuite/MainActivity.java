@@ -79,7 +79,7 @@ public void init(){
     listItems.add("SSH Client");
     listItems.add("Portscan");
     listItems.add("FTP Client");
-    lv.setBackgroundResource(R.drawable.customrect);
+    //lv.setBackgroundResource(R.drawable.customrect);
     adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems){
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
