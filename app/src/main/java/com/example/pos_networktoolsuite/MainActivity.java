@@ -44,7 +44,7 @@ public class MainActivity extends FragmentActivity {
     ImageView home;
     int menu = 0;
     int action = 0;
-
+    SSHClient sc = new SSHClient();
     ListView lv;
 
     public void Display(View v) {
@@ -83,7 +83,7 @@ public class MainActivity extends FragmentActivity {
         listItems.add("SSH Client");
         listItems.add("Portscan");
         listItems.add("FTP Client");
-        lv.setBackgroundResource(R.drawable.customrect);
+        //lv.setBackgroundResource(R.drawable.customrect);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -326,7 +326,7 @@ alert();
     }
 
     public void sshdialog() {
-        final SSHClient sc = new SSHClient();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.message).setTitle(R.string.connect);
         //

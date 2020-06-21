@@ -9,14 +9,23 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class SSHClient extends Activity {
 private static String output;
+private String commanduse = "ls";
 private String uname;
-private static Session session;
+private Session session;
+    ByteArrayOutputStream baos;
+    InputStream in;
+    InputStream err;
+    private ChannelExec channelssh;
+    StringBuilder o;
+    String previousreturn = "azter12aw1";
 private String pw;
 private String ip;
     static JSch jsch;
@@ -37,9 +46,8 @@ public void setValues(String username, String ip, String pw){
                     try {
                         publishProgress(new Void[0]);
                         executeRemoteCommand(uname, pw,ip, 22, command);
-
                     } catch (Exception e) {
-                            Log.w("test",e);
+                            Log.w("test",e.toString());
                     }
                     return null;
                 }
@@ -52,27 +60,33 @@ public void setValues(String username, String ip, String pw){
             }.execute(1);
         }
 
-        public static String executeRemoteCommand(String username,String password,String hostname,int port, String command)
+        public String executeRemoteCommand(String username,String password,String hostname,int port, String command)
                 throws Exception {
-            session = jsch.getSession(username, hostname, port);
-            session.setPassword(password);
-            // Avoid asking for key confirmation
-            Properties prop = new Properties();
-            prop.put("StrictHostKeyChecking", "no");
-            session.setConfig(prop);
-            session.connect();
-            // SSH Channel
-            ChannelExec channelssh = (ChannelExec)
-                    session.openChannel("exec");
-            Log.w("test","connected");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Log.w("command", command);
+            if(session == null)
+            {
+                session = jsch.getSession(username, hostname, port);
+                session.setPassword(password);
+                // Avoid asking for key confirmation
+                Properties prop = new Properties();
+                prop.put("StrictHostKeyChecking", "no");
+                session.setConfig(prop);
+                session.connect();
+            }
+            baos = new ByteArrayOutputStream();
+                channelssh = (ChannelExec)
+                        session.openChannel("exec");
+                Log.w("test","connected");
+                o= new StringBuilder();
+                // Execute command
+            commanduse+=" ; "+command;
+            Log.w("commanduse",commanduse);
+            channelssh.setCommand(commanduse);
             channelssh.setOutputStream(baos);
-            StringBuilder o=new StringBuilder();
-            // Execute command
-            channelssh.setCommand(command);
-            InputStream in = channelssh.getInputStream();
-            InputStream err = channelssh.getExtInputStream();
+
             channelssh.connect();
+            in = channelssh.getInputStream();
+            err = channelssh.getExtInputStream();
             byte[] tmp = new byte[1024];
             while (true) {
                 while (in.available() > 0) {
@@ -91,15 +105,20 @@ public void setValues(String username, String ip, String pw){
                     Log.w("test",ee.getMessage());
                 }
             }
-
-            channelssh.disconnect();
             Log.w("out",o.toString());
-            output=username+": "+o.toString();
+            output=StringUtils.remove(o.toString(), previousreturn);
+            previousreturn = o.toString();
+
+            Log.w("returnvalue",o.toString());
+            Log.w("baosstring", baos.toString());
             return baos.toString();
         }
         public void closeSession()
         {
+            channelssh.disconnect();
+            channelssh = null;
             session.disconnect();
+            session = null;
         }
         public String getOutput(){
             return output;
