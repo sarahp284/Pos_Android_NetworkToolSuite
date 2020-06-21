@@ -3,6 +3,10 @@ package com.example.pos_networktoolsuite;
 import android.os.StrictMode;
 import android.util.Log;
 
+import org.icmp4j.IcmpPingRequest;
+import org.icmp4j.IcmpPingResponse;
+import org.icmp4j.IcmpPingUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +20,6 @@ public class PingScanner {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         String output="";
-        if(InetAddress.getByName(host).isReachable(200)) {
             Process p = r.exec(new String[]{"ping", "-c 1 -w 1", host});
             BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String inputLine;
@@ -33,9 +36,7 @@ public class PingScanner {
 
                 }
             }
-        }else{
-            output="Host not reachable";
-        }
+
 
         return output;
     }

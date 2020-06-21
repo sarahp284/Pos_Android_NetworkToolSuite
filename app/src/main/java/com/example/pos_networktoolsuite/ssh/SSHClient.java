@@ -3,6 +3,7 @@ package com.example.pos_networktoolsuite.ssh;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.jcraft.jsch.ChannelExec;
@@ -10,7 +11,10 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Properties;
 
 public class SSHClient extends Activity {
@@ -19,11 +23,15 @@ private String uname;
 private String pw;
 private String ip;
     static JSch jsch;
-public void setValues(String username, String ip, String pw){
+public void setValues(String username, String ip, String pw) throws IOException {
+    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy(policy);
     uname=username;
     this.ip=ip;
     this.pw=pw;
-     jsch = new JSch();
+    jsch = new JSch();
+
+
 }
 
         @SuppressLint("StaticFieldLeak")

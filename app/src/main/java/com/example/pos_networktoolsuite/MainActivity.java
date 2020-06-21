@@ -30,8 +30,13 @@ import com.example.pos_networktoolsuite.beans.PortReader;
 import com.example.pos_networktoolsuite.networkscan.PortScan;
 import com.example.pos_networktoolsuite.ssh.SSHClient;
 
+import org.icmp4j.IcmpPingRequest;
+import org.icmp4j.IcmpPingResponse;
+import org.icmp4j.IcmpPingUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -288,7 +293,8 @@ public class MainActivity extends FragmentActivity {
 
                     }
                 } else {
-alert();
+alert("Data was input the wrong format!","Wrong input format!");
+hideKeyBoard();
                 }
             }
 
@@ -343,38 +349,60 @@ alert();
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText etun = view.findViewById(R.id.username);
+
                 EditText etpw = view.findViewById(R.id.pw);
                 EditText ethost = view.findViewById(R.id.host);
                 String uname = etun.getText() + "";
                 String pw = etpw.getText() + "";
                 String host = ethost.getText() + "";
-
+                String base = "([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])";
+                String regex = base + "\\." + base + "\\."
+                        + base + "\\." + base;
+                if (host.matches(regex)) {
+                    try {
                     sc.setValues(uname, host, pw);
+                        IcmpPingRequest request= IcmpPingUtil.createIcmpPingRequest();
+                        request.setHost(host);
+                        IcmpPingResponse help=IcmpPingUtil.executePingRequest(request);
+                        String returnm=help+"";
+                        if(returnm.contains("successFlag: true")) {
+                            alert("Connection successful", "Success!");
+
+                        }else{
+                            alert("Connection unscuccessful. Host unreachable!", "Host unreachable");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     hideKeyBoard();
 
-
+                }else{
+                    alert("Data was input the wrong format!","Wrong input format!");
+                    hideKeyBoard();
+                }
             }
         });
 
-        Button send = findViewById(R.id.send);
-        final TextView input = findViewById(R.id.input);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyBoard();
-                final Handler handler = new Handler();
-                sc.onSSHconnect(input.getText() + "");
-                handler.post(new Runnable() {
-                    public void run() {
-                        String output = sc.getOutput();
-                        TextView terminal = findViewById(R.id.terminal);
-                        terminal.setText(output);
-                        handler.postDelayed(this, 100);
-                    }
-                });
+    Button send = findViewById(R.id.send);
+    final TextView input = findViewById(R.id.input);
+    send.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            hideKeyBoard();
+            final Handler handler = new Handler();
+            sc.onSSHconnect(input.getText() + "");
+            handler.post(new Runnable() {
+                public void run() {
+                    String output = sc.getOutput();
+                    TextView terminal = findViewById(R.id.terminal);
+                    terminal.setText(output);
+                    handler.postDelayed(this, 100);
+                }
+            });
 
-            }
-        });
+        }
+    });
+
 
         AlertDialog ad = builder.create();
         ad.show();
@@ -440,11 +468,17 @@ alert();
                                 for (int i = 1; i < 400; i++) {
                                     OpenPort op;
                                     op = ps.startPortscan(ip, i, 100);
-                                    if (op.getIsOpen()) {
-                                        if (pr.getPorts().containsKey(op.getPort() + "")) {
-                                            listItems.add(op.getPort() + "  " + pr.getPorts().get(op.getPort() + ""));
-                                            adapter.notifyDataSetChanged();
-                                            handler.postDelayed(this, 50);
+                                    if(op.getPort()==0){
+                                        listItems.add("Address unreachable");
+                                        adapter.notifyDataSetChanged();
+                                        break;
+                                    }else {
+                                        if (op.getIsOpen()) {
+                                            if (pr.getPorts().containsKey(op.getPort() + "")) {
+                                                listItems.add(op.getPort() + "  " + pr.getPorts().get(op.getPort() + ""));
+                                                adapter.notifyDataSetChanged();
+                                                handler.postDelayed(this, 50);
+                                            }
                                         }
                                     }
                                 }
@@ -456,7 +490,8 @@ alert();
 
 
                 } else {
-                    alert();
+                    alert("Data was input the wrong format!","Wrong input format!");
+                    hideKeyBoard();
                 }
             }
         });
@@ -470,9 +505,9 @@ alert();
 
     // SSHClient sc=new SSHClient();
     //   sc.onSSHconnect();
-   public void alert(){
+   public void alert(String message, String title){
        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-       builder.setMessage("Data was input in the wrong format").setTitle("Wrong Input Format");
+       builder.setMessage(message).setTitle(title);
        final LayoutInflater inflater = LayoutInflater.from(this);
       // final View view = inflater.inflate(R.layout.dialog, null, false);
        String name = "";
