@@ -86,7 +86,6 @@
         android:id="@+id/connect"
         android:layout_width="104dp"
         android:layout_height="55dp"
-        android:layout_marginEnd="16dp"
         android:background="#E8000000"
         android:text="      connect"
         android:textColor="#FFFFFF"

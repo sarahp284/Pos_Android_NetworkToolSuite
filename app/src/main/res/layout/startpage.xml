@@ -24,8 +24,8 @@
 
     <ListView
         android:id="@+id/action"
-        android:layout_width="208dp"
-        android:layout_height="306dp"
+        android:layout_width="211dp"
+        android:layout_height="197dp"
         android:background="#DF324A6B"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/menuBar" />

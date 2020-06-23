@@ -2,10 +2,12 @@ package com.example.pos_networktoolsuite;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -82,7 +84,6 @@ public class MainActivity extends FragmentActivity {
         listItems.add("Ping Client");
         listItems.add("SSH Client");
         listItems.add("Portscan");
-        listItems.add("FTP Client");
         //lv.setBackgroundResource(R.drawable.customrect);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
             @Override
@@ -191,6 +192,7 @@ public class MainActivity extends FragmentActivity {
                             i++;
                             handler.postDelayed(this, 1);
                         } else {
+
                             Log.w("done", "done");
                         }
                     }
@@ -202,6 +204,7 @@ public class MainActivity extends FragmentActivity {
     // calling ping client and visualize output
     public void callPingClient() {
 //initialize variables
+
         setContentView(R.layout.pingclient);
         final EditText et = findViewById(R.id.ping);
         final ListView pingres = findViewById(R.id.ping_results);
@@ -268,10 +271,10 @@ public class MainActivity extends FragmentActivity {
                         final PingScanner ps = new PingScanner();
                         handler.post(new Runnable() {
                             private int i = 0;
-
+                           // ProgressDialog mProgressDialog=null;
                             public void run() {
-
                                 if (i <= 3) {
+                                  //  mProgressDialog  = ProgressDialog.show(MainActivity.this, "Please wait","Long operation starts...", true);
                                     try {
 
                                         String a = ps.ping(input);
@@ -283,6 +286,8 @@ public class MainActivity extends FragmentActivity {
                                         e.printStackTrace();
                                     }
                                     //  output.append(set + "\n");
+                                }else{
+                                   // mProgressDialog.dismiss();
                                 }
 
 
@@ -444,7 +449,6 @@ public class MainActivity extends FragmentActivity {
                 return item;
             }
         };
-
         ps_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -468,15 +472,14 @@ public class MainActivity extends FragmentActivity {
                     final PortScan ps = new PortScan(pr.getPorts());
                     final Handler handler = new Handler();
                     listItems.clear();
-                    handler.post(new Runnable() {
+                    handler.post(new Thread() {
                         int h = 0;
-
                         public void run() {
 //perform portscan and list open ports
                             if (h == 0) {
                                 for (int i = 1; i < 400; i++) {
                                     OpenPort op;
-                                    op = ps.startPortscan(ip, i, 100);
+                                    op = ps.startPortscan(ip, i, 80);
                                     if (op.getPort() == 0) {
                                         listItems.add("Address unreachable");
                                         adapter.notifyDataSetChanged();
@@ -486,12 +489,13 @@ public class MainActivity extends FragmentActivity {
                                             if (pr.getPorts().containsKey(op.getPort() + "")) {
                                                 listItems.add(op.getPort() + "  " + pr.getPorts().get(op.getPort() + ""));
                                                 adapter.notifyDataSetChanged();
-                                                handler.postDelayed(this, 50);
+                                                handler.postDelayed(this, 25);
                                             }
                                         }
                                     }
                                 }
                                 Log.w("done", "done");
+                              //  mProgressDialog.dismiss();
                                 h++;
                             }
                         }
@@ -502,6 +506,7 @@ public class MainActivity extends FragmentActivity {
                     alert("Data was input the wrong format!", "Wrong input format!");
                     hideKeyBoard();
                 }
+
             }
         });
 
@@ -534,6 +539,7 @@ public class MainActivity extends FragmentActivity {
     }
 
 }
+
 
 
 
