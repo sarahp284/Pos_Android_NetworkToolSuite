@@ -18,21 +18,22 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.TreeMap;
 
+/*BL class for mapping the ports with standardized open ports*/
 public class PortReader {
-    String filename="C:\\Users\\Sarah\\AndroidStudioProjects\\POS_NetworkToolSuite\\app\\src\\main\\java\\com\\example\\pos_networktoolsuite\\test\\test.csv";
-    Map<String,String> ports=new TreeMap<>();
+    String filename = "C:\\Users\\Sarah\\AndroidStudioProjects\\POS_NetworkToolSuite\\app\\src\\main\\java\\com\\example\\pos_networktoolsuite\\test\\test.csv";
+    Map<String, String> ports = new TreeMap<>();
 
     public void read(InputStream is) throws IOException {
-        BufferedReader br=new BufferedReader(new InputStreamReader(is));
-        String line="";
-        while((line=br.readLine())!=null){
-            String parts[]=line.split(";");
-            ports.put(parts[0],parts[1]);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String line = "";
+        while ((line = br.readLine()) != null) {
+            String parts[] = line.split(";");
+            ports.put(parts[0], parts[1]);
         }
     }
 
 
-    public Map<String,String> getPorts(){
+    public Map<String, String> getPorts() {
         return ports;
     }
 }

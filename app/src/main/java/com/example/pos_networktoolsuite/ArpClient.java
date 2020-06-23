@@ -17,55 +17,58 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.LinkedList;
 
-public class ArpClient  {
+public class ArpClient {
+    /*Class for scanning the network for available clients*/
 
     LinkedList<String> devices = new LinkedList<>();
     WifiManager mWifiManager;
-private static Context mContext;
+    private static Context mContext;
     Handler mHandler = new Handler();
-    int hostint=0;
+    int hostint = 0;
 
+//Set context
 
-    public ArpClient(Context c){
-mContext=c;
+    public ArpClient(Context c) {
+        mContext = c;
     }
 
+//Perform Ping on network address, if reachable ip is returned and mac address is looked up
 
     protected String doInBackground(int hostint) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        mWifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
         String subnet = getSubnetAddress(mWifiManager.getDhcpInfo().gateway);
-            String host = subnet + "." + hostint;
-        String strMacAddress="";
-            try {
-                if (InetAddress.getByName(host).isReachable(50)) {
+        String host = subnet + "." + hostint;
+        String strMacAddress = "";
+        try {
+            if (InetAddress.getByName(host).isReachable(50)) {
 
-                    strMacAddress = getMacFromIP(host);
-                    Log.w("IP",host);
-                    return  "IP Adr.: "+host +"\n  MAC Adr.: "+strMacAddress;
-                } else {
-                  // return "no device";
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                strMacAddress = getMacFromIP(host);
+                Log.w("IP", host);
+                return "IP Adr.: " + host + "\n  MAC Adr.: " + strMacAddress;
+            } else {
+                // return "no device";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
 
         }
         return "a";
     }
 
-    public void log(String message)
-    {
+    public void log(String message) {
         devices.add(message);
     }
 
 
-    public LinkedList<String> getDevices()
-    {
-        Log.w("Devicetest",devices.size()+"");
+    public LinkedList<String> getDevices() {
+        Log.w("Devicetest", devices.size() + "");
         return devices;
     }
+
+    //Maps the mac address to an ip address
 
     public String getMacFromIP(String ipaddress) {
         String mac = "";
@@ -93,21 +96,23 @@ mContext=c;
             e.printStackTrace();
         }
 
-return "";
+        return "";
     }
-    private String getSubnetAddress(int address)
-    {
-       String ipString="";
+
+    //returns IP format String
+
+    private String getSubnetAddress(int address) {
+        String ipString = "";
         try {
-             ipString = String.format(
+            ipString = String.format(
                     "%d.%d.%d",
                     (address & 0xff),
                     (address >> 8 & 0xff),
                     (address >> 16 & 0xff));
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
-            return ipString;
+        return ipString;
 
     }
 

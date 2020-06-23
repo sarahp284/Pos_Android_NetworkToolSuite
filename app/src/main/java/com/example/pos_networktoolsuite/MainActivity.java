@@ -20,25 +20,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
-
 import com.example.pos_networktoolsuite.beans.OpenPort;
 import com.example.pos_networktoolsuite.beans.PortReader;
 import com.example.pos_networktoolsuite.networkscan.PortScan;
 import com.example.pos_networktoolsuite.ssh.SSHClient;
-
 import org.icmp4j.IcmpPingRequest;
 import org.icmp4j.IcmpPingResponse;
 import org.icmp4j.IcmpPingUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 
 public class MainActivity extends FragmentActivity {
@@ -51,6 +43,8 @@ public class MainActivity extends FragmentActivity {
     int action = 0;
     SSHClient sc = new SSHClient();
     ListView lv;
+
+    //Method for disabling and enabling menu
 
     public void Display(View v) {
         if (menu % 2 == 0) {
@@ -69,6 +63,7 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    // Init method for startpage
     public void init() {
         setContentView(R.layout.startpage);
         iv = findViewById(R.id.menuBar);
@@ -137,12 +132,12 @@ public class MainActivity extends FragmentActivity {
         init();
 
     }
+// Method for calling the arp scan and setting the arp page layout
 
     public void callARPClient() {
-        // Begin the transaction
+        //initialize variables
         setContentView(R.layout.arpclient);
         ArrayAdapter<String> adapter;
-        // Begin the transaction
         home = findViewById(R.id.imageView2);
         home.setOnClickListener(new View.OnClickListener() {
 
@@ -154,6 +149,7 @@ public class MainActivity extends FragmentActivity {
         liste = findViewById(R.id.liste);
         btnClick = findViewById(R.id.button);
         final ArrayList<String> listItems = new ArrayList<String>();
+        //set textview settings
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 listItems) {
@@ -173,6 +169,7 @@ public class MainActivity extends FragmentActivity {
         };
         liste.setAdapter(adapter);
         final ArrayAdapter<String> finalAdapter = adapter;
+        //run arp scan on network
         btnClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,8 +199,9 @@ public class MainActivity extends FragmentActivity {
         });
     }
 
+    // calling ping client and visualize output
     public void callPingClient() {
-
+//initialize variables
         setContentView(R.layout.pingclient);
         final EditText et = findViewById(R.id.ping);
         final ListView pingres = findViewById(R.id.ping_results);
@@ -220,6 +218,7 @@ public class MainActivity extends FragmentActivity {
         });
         final ArrayAdapter<String> adapter;
         final ArrayList<String> listItems = new ArrayList<String>();
+        //set textview settings and append visual sign signaling ping success
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -253,7 +252,7 @@ public class MainActivity extends FragmentActivity {
                 et.setText("");
             }
         });
-
+//check ip, perform ping scan and set output
         pingb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,8 +292,8 @@ public class MainActivity extends FragmentActivity {
 
                     }
                 } else {
-alert("Data was input the wrong format!","Wrong input format!");
-hideKeyBoard();
+                    alert("Data was input the wrong format!", "Wrong input format!");
+                    hideKeyBoard();
                 }
             }
 
@@ -302,6 +301,7 @@ hideKeyBoard();
         });
     }
 
+    //setting ssh page layout and adding event handler to connectg button
     public void callSSHDialog() {
         setContentView(R.layout.sshterminal);
         home = findViewById(R.id.imageViewhelp2);
@@ -323,6 +323,7 @@ hideKeyBoard();
 
     }
 
+    //Method hides keyboard after input
     public void hideKeyBoard() {
         View view1 = this.getCurrentFocus();
         if (view1 != null) {
@@ -331,11 +332,11 @@ hideKeyBoard();
         }
     }
 
+    //Method creates connect dialogue and calls ssh Client class
     public void sshdialog() {
-
+//initializing Alert Dialogue
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.message).setTitle(R.string.connect);
-        //
         final LayoutInflater inflater = LayoutInflater.from(this);
         final View view = inflater.inflate(R.layout.dialog, null, false);
         String name = "";
@@ -348,8 +349,8 @@ hideKeyBoard();
         });
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                //initializing variables
                 EditText etun = view.findViewById(R.id.username);
-
                 EditText etpw = view.findViewById(R.id.pw);
                 EditText ethost = view.findViewById(R.id.host);
                 String uname = etun.getText() + "";
@@ -360,15 +361,16 @@ hideKeyBoard();
                         + base + "\\." + base;
                 if (host.matches(regex)) {
                     try {
-                    sc.setValues(uname, host, pw);
-                        IcmpPingRequest request= IcmpPingUtil.createIcmpPingRequest();
+                        //set values and check if dest ip is reachable
+                        sc.setValues(uname, host, pw);
+                        IcmpPingRequest request = IcmpPingUtil.createIcmpPingRequest();
                         request.setHost(host);
-                        IcmpPingResponse help=IcmpPingUtil.executePingRequest(request);
-                        String returnm=help+"";
-                        if(returnm.contains("successFlag: true")) {
+                        IcmpPingResponse help = IcmpPingUtil.executePingRequest(request);
+                        String returnm = help + "";
+                        if (returnm.contains("successFlag: true")) {
                             alert("Connection successful", "Success!");
 
-                        }else{
+                        } else {
                             alert("Connection unscuccessful. Host unreachable!", "Host unreachable");
                         }
                     } catch (IOException e) {
@@ -376,32 +378,37 @@ hideKeyBoard();
                     }
                     hideKeyBoard();
 
-                }else{
-                    alert("Data was input the wrong format!","Wrong input format!");
+                } else {
+                    alert("Data was input the wrong format!", "Wrong input format!");
                     hideKeyBoard();
                 }
             }
         });
 
-    Button send = findViewById(R.id.send);
-    final TextView input = findViewById(R.id.input);
-    send.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            hideKeyBoard();
-            final Handler handler = new Handler();
-            sc.onSSHconnect(input.getText() + "");
-            handler.post(new Runnable() {
-                public void run() {
-                    String output = sc.getOutput();
-                    TextView terminal = findViewById(R.id.terminal);
-                    terminal.setText(output);
-                    handler.postDelayed(this, 100);
-                }
-            });
+        Button send = findViewById(R.id.send);
+        final TextView input = findViewById(R.id.input);
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyBoard();
+                final Handler handler = new Handler();
+                sc.onSSHconnect(input.getText() + "");
+                handler.post(new Runnable() {
+                    public void run() {
+                        //call command execution and connection in SSH Client class
+                        try {
+                            String output = sc.getOutput();
+                            TextView terminal = findViewById(R.id.terminal);
+                            terminal.setText(output);
+                            handler.postDelayed(this, 100);
+                        } catch (Exception e) {
 
-        }
-    });
+                        }
+                    }
+                });
+
+            }
+        });
 
 
         AlertDialog ad = builder.create();
@@ -409,6 +416,7 @@ hideKeyBoard();
 
     }
 
+    //sets portscan layout page and calls portscan method
     public void callportscan() {
         setContentView(R.layout.portscan);
         home = findViewById(R.id.imageV2);
@@ -452,6 +460,7 @@ hideKeyBoard();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                //check ip
                 String base = "([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])";
                 String regex = base + "\\." + base + "\\."
                         + base + "\\." + base;
@@ -463,16 +472,16 @@ hideKeyBoard();
                         int h = 0;
 
                         public void run() {
-
+//perform portscan and list open ports
                             if (h == 0) {
                                 for (int i = 1; i < 400; i++) {
                                     OpenPort op;
                                     op = ps.startPortscan(ip, i, 100);
-                                    if(op.getPort()==0){
+                                    if (op.getPort() == 0) {
                                         listItems.add("Address unreachable");
                                         adapter.notifyDataSetChanged();
                                         break;
-                                    }else {
+                                    } else {
                                         if (op.getIsOpen()) {
                                             if (pr.getPorts().containsKey(op.getPort() + "")) {
                                                 listItems.add(op.getPort() + "  " + pr.getPorts().get(op.getPort() + ""));
@@ -490,7 +499,7 @@ hideKeyBoard();
 
 
                 } else {
-                    alert("Data was input the wrong format!","Wrong input format!");
+                    alert("Data was input the wrong format!", "Wrong input format!");
                     hideKeyBoard();
                 }
             }
@@ -498,33 +507,31 @@ hideKeyBoard();
 
     }
 
+    //deletes text from editviews after double click
     public void moveText(View v) {
         EditText et = (EditText) v;
         et.setText("");
     }
 
-    // SSHClient sc=new SSHClient();
-    //   sc.onSSHconnect();
-   public void alert(String message, String title){
-       AlertDialog.Builder builder = new AlertDialog.Builder(this);
-       builder.setMessage(message).setTitle(title);
-       final LayoutInflater inflater = LayoutInflater.from(this);
-      // final View view = inflater.inflate(R.layout.dialog, null, false);
-       String name = "";
-      // builder.setView(view);
-       builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-               // User cancelled the dialog
+    //Creating alerts if input is malformatted or host is unreachable
+    public void alert(String message, String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message).setTitle(title);
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        String name = "";
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
 
-           }
-       });
-       builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
 
-           }
-       });
-       builder.create().show();
-   }
+            }
+        });
+        builder.create().show();
+    }
 
 }
 
