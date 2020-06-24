@@ -1,5 +1,6 @@
 package com.example.pos_networktoolsuite;
 
+import android.app.ProgressDialog;
 import android.os.StrictMode;
 import android.util.Log;
 
@@ -13,7 +14,6 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 
 public class PingScanner {
-
     /*Class for pinging client ip*/
     public String ping(String host) throws IOException {
         Runtime r = Runtime.getRuntime();

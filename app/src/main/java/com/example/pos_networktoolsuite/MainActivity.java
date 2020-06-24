@@ -271,7 +271,7 @@ public class MainActivity extends FragmentActivity {
                         final PingScanner ps = new PingScanner();
                         handler.post(new Runnable() {
                             private int i = 0;
-                           // ProgressDialog mProgressDialog=null;
+                            //ProgressDialog mProgressDialog=null;
                             public void run() {
                                 if (i <= 3) {
                                   //  mProgressDialog  = ProgressDialog.show(MainActivity.this, "Please wait","Long operation starts...", true);
@@ -287,7 +287,7 @@ public class MainActivity extends FragmentActivity {
                                     }
                                     //  output.append(set + "\n");
                                 }else{
-                                   // mProgressDialog.dismiss();
+                                  //  mProgressDialog.dismiss();
                                 }
 
 
@@ -403,6 +403,7 @@ public class MainActivity extends FragmentActivity {
                         //call command execution and connection in SSH Client class
                         try {
                             String output = sc.getOutput();
+                           // Log.w("output",output);
                             TextView terminal = findViewById(R.id.terminal);
                             terminal.setText(output);
                             handler.postDelayed(this, 100);
